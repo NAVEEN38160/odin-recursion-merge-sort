@@ -77,3 +77,101 @@ function mergynomical(x) {
 }
 
 // --------------------------------------------------------------------------------------------------------------------
+
+const Node = (value, nextNode = null) => {
+  return { value, nextNode };
+};
+
+const LinkedList = () => {
+  const list = [];
+
+  const append = (value) => {
+    const newNode = Node(value);
+    if (list.length) {
+      list[list.length - 1].nextNode = newNode;
+      list.push(newNode);
+      return;
+    }
+    list.push(newNode);
+  };
+
+  const prepend = (value) => {
+    list.unshift(Node(value, list[0]));
+  };
+
+  const size = () => list.length;
+
+  const head = () => list[0];
+
+  const tail = () => list[list.length - 1];
+
+  const at = (index) => list.at(index);
+
+  const pop = () => {
+    list.pop();
+    list[list.length - 1].nextNode = null;
+  };
+
+  const contains = (value) => !!list.filter((x) => x.value === value).length;
+
+  const find = (value) => {
+    const index = list.findIndex((x) => x.value === value);
+    return index !== -1 ? index : null;
+  };
+
+  const toString = () => {
+    let final = "";
+    list.forEach((node, i) => {
+      if (i === list.length - 1) {
+        final += ` ( ${node.value} ) -> null`;
+      } else {
+        final += `( ${node.value} ) -> `;
+      }
+    });
+    return final;
+  };
+
+  const insertAt = (value, index) => {
+    list.splice(index, 0, Node(value, list[index]));
+    if (list[index - 1]) {
+      list[index - 1].nextNode = list[index];
+    }
+  };
+
+  const removeAt = (index) => {
+    list.splice(index, 1);
+    if (list[index - 1]) {
+      list[index - 1].nextNode = list[index] ?? null;
+    }
+  };
+
+  return {
+    append,
+    prepend,
+    size,
+    head,
+    tail,
+    at,
+    pop,
+    contains,
+    find,
+    toString,
+    insertAt,
+    removeAt,
+  };
+};
+
+const {
+  append,
+  prepend,
+  size,
+  head,
+  tail,
+  at,
+  pop,
+  contains,
+  find,
+  toString,
+  insertAt,
+  removeAt,
+} = LinkedList();
