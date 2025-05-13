@@ -161,17 +161,80 @@ const LinkedList = () => {
   };
 };
 
-const {
-  append,
-  prepend,
-  size,
-  head,
-  tail,
-  at,
-  pop,
-  contains,
-  find,
-  toString,
-  insertAt,
-  removeAt,
-} = LinkedList();
+// ----------------------------------------------------------------------------------------------------------------------
+
+const HashMap = () => {
+  let buckets = [];
+
+  // const loadFactor = 0.75;
+
+  // let capacity = 16;
+
+  const hash = (key) => {
+    let hashCode = 0;
+    const primeNumber = 31;
+    for (let i = 0; i < key.length; i++) {
+      hashCode = primeNumber * hashCode + key.charCodeAt(i);
+    }
+    return hashCode % 16; // capacity = 16;
+  };
+
+  const set = (key, value) => {
+    const index = hash(key);
+    const currentNode = buckets[index];
+    if (currentNode && currentNode[0] === key) {
+      currentNode[1] = value;
+    } else {
+      buckets[index] = [key, value];
+    }
+  };
+
+  const get = (key) => {
+    const index = hash(key);
+    if (has(key)) {
+      return buckets[index][1];
+    }
+    return null;
+  };
+
+  const has = (key) => {
+    const index = hash(key);
+    const found = buckets[index];
+    return !!(found && found[0] === key);
+  };
+
+  const remove = (key) => {
+    const index = hash(key);
+    if (has(key)) {
+      delete buckets[index];
+      return true;
+    }
+    return false;
+  };
+
+  const length = () => buckets.filter((node) => node).length;
+
+  const clear = () => {
+    buckets = [];
+  };
+
+  const keys = () => buckets.filter((node) => node).map((node) => node[0]);
+
+  const values = () => buckets.filter((node) => node).map((node) => node[1]);
+
+  const entries = () => buckets.filter((node) => node);
+
+  return {
+    get,
+    set,
+    has,
+    remove,
+    clear,
+    length,
+    keys,
+    values,
+    entries,
+  };
+};
+
+// -------------------------------------------------------------------------------------------------------------------------
