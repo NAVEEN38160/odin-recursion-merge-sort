@@ -294,9 +294,9 @@ const LinkedList = () => {
 const HashMap = () => {
   let buckets = [];
 
-  // const loadFactor = 0.75;
+  const loadFactor = 0.75;
 
-  // let capacity = 16;
+  let capacity = 16;
 
   const hash = (key) => {
     let hashCode = 0;
@@ -304,53 +304,160 @@ const HashMap = () => {
     for (let i = 0; i < key.length; i++) {
       hashCode = primeNumber * hashCode + key.charCodeAt(i);
     }
-    return hashCode % 16; // capacity = 16;
+    return hashCode % capacity;
   };
 
   const set = (key, value) => {
     const index = hash(key);
-    const currentNode = buckets[index];
-    if (currentNode && currentNode[0] === key) {
-      currentNode[1] = value;
+
+    const node = buckets[index];
+
+    if (node) {
+      let current = node;
+      while (current) {
+        if (current.value[0] === key) {
+          current.value[1] = value;
+          break;
+        } else if (current.nextNode) {
+          current = current.nextNode;
+        } else {
+          current.nextNode = { value: [key, value], nextNode: null };
+          break;
+        }
+      }
     } else {
-      buckets[index] = [key, value];
+      buckets[index] = { value: [key, value], nextNode: null };
+    }
+
+    const loadLimitReached = length() === capacity * loadFactor;
+    if (loadLimitReached) {
+      expandMap();
     }
   };
 
   const get = (key) => {
     const index = hash(key);
-    if (has(key)) {
-      return buckets[index][1];
+    const node = buckets[index];
+    if (node) {
+      let current = node;
+      while (current) {
+        if (current.value[0] === key) {
+          return current.value[1];
+        }
+        current = current.nextNode;
+      }
     }
     return null;
   };
 
   const has = (key) => {
     const index = hash(key);
-    const found = buckets[index];
-    return !!(found && found[0] === key);
-  };
-
-  const remove = (key) => {
-    const index = hash(key);
-    if (has(key)) {
-      delete buckets[index];
-      return true;
+    const node = buckets[index];
+    if (node) {
+      let current = node;
+      while (current) {
+        if (current.value[0] === key) {
+          return true;
+        }
+        current = current.nextNode;
+      }
     }
     return false;
   };
 
-  const length = () => buckets.filter((node) => node).length;
+  const remove = (key) => {
+    const index = hash(key);
+    const node = buckets[index];
+    if (node) {
+      let current = node;
+      while (current) {
+        if (current.value[0] === key) {
+          buckets[index] = current.nextNode;
+          return true;
+        } else if (current.nextNode && current.nextNode.value[0] === key) {
+          current.nextNode = current.nextNode.nextNode;
+          return true;
+        }
+        current = current.nextNode;
+      }
+    }
+    return false;
+  };
+
+  const length = () => {
+    let count = 0;
+    buckets
+      .filter((node) => !!node)
+      .forEach((node) => {
+        let current = node;
+        while (current) {
+          count += 1;
+          current = current.nextNode;
+        }
+      });
+    return count;
+  };
 
   const clear = () => {
     buckets = [];
   };
 
-  const keys = () => buckets.filter((node) => node).map((node) => node[0]);
+  const keys = () => {
+    const result = [];
+    buckets
+      .filter((node) => !!node)
+      .forEach((node) => {
+        let current = node;
+        while (current) {
+          result.push(current.value[0]);
+          current = current.nextNode;
+        }
+      });
+    return result;
+  };
 
-  const values = () => buckets.filter((node) => node).map((node) => node[1]);
+  const values = () => {
+    const result = [];
+    buckets
+      .filter((node) => !!node)
+      .forEach((node) => {
+        let current = node;
+        while (current) {
+          result.push(current.value[1]);
+          current = current.nextNode;
+        }
+      });
+    return result;
+  };
 
-  const entries = () => buckets.filter((node) => node);
+  const entries = () => {
+    const result = [];
+    buckets
+      .filter((node) => !!node)
+      .forEach((node) => {
+        let current = node;
+        while (current) {
+          result.push(current.value);
+          current = current.nextNode;
+        }
+      });
+    return result;
+  };
+
+  const expandMap = () => {
+    const previous = [...buckets];
+    clear();
+    capacity *= 2;
+    previous
+      .filter((node) => !!node)
+      .forEach((node) => {
+        let current = node;
+        while (current) {
+          set(current.value[0], current.value[1]);
+          current = current.nextNode;
+        }
+      });
+  };
 
   return {
     get,
