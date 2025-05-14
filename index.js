@@ -82,7 +82,7 @@ const Node = (value, nextNode = null) => {
   return { value, nextNode };
 };
 
-const LinkedList = () => {
+const LinkedList1 = () => {
   const list = [];
 
   const append = (value) => {
@@ -158,6 +158,134 @@ const LinkedList = () => {
     toString,
     insertAt,
     removeAt,
+  };
+};
+
+const LinkedList = () => {
+  let headNode = null;
+
+  const append = (value) => {
+    const newNode = Node(value);
+    if (!headNode) {
+      headNode = newNode;
+      return;
+    }
+    let current = headNode;
+    while (current.nextNode) {
+      current = current.nextNode;
+    }
+    current.nextNode = newNode;
+  };
+
+  const prepend = (value) => {
+    const newNode = Node(value);
+    if (headNode) {
+      newNode.nextNode = headNode;
+    }
+    headNode = newNode;
+  };
+
+  const size = () => {
+    let n = 0;
+    if (!headNode) {
+      return n;
+    }
+    let current = headNode;
+    while (current.nextNode) {
+      n += 1;
+      current = current.nextNode;
+    }
+    return n + 1;
+  };
+
+  const head = () => headNode;
+
+  const tail = () => {
+    if (!headNode) {
+      return null;
+    }
+    let current = headNode;
+    while (current.nextNode) {
+      current = current.nextNode;
+    }
+    return current;
+  };
+
+  const at = (index) => {
+    let target = 0;
+    let current = headNode;
+    while (target < index) {
+      target += 1;
+      current = current.nextNode;
+    }
+    return current;
+  };
+
+  const pop = () => {
+    if (!headNode) {
+      return;
+    }
+    let current = headNode;
+    while (current) {
+      if (!headNode.nextNode) {
+        headNode = null;
+        break;
+      } else if (!current.nextNode.nextNode) {
+        current.nextNode = null;
+        break;
+      }
+      current = current.nextNode;
+    }
+  };
+
+  const contains = (value) => {
+    if (!headNode) {
+      return false;
+    }
+    let current = headNode;
+    while (current) {
+      if (current.value === value) {
+        return true;
+      }
+      current = current.nextNode;
+    }
+    return false;
+  };
+
+  const find = (value) => {
+    let current = headNode;
+    let i = 0;
+    while (current) {
+      if (current.value === value) {
+        return i;
+      }
+      current = current.nextNode;
+      i++;
+    }
+    return null;
+  };
+
+  const toString = () => {
+    let result = "";
+    let current = headNode;
+    while (current) {
+      result += `( ${current.value} ) -> `;
+      current = current.nextNode;
+    }
+    return result + "null";
+  };
+
+  return {
+    append,
+    prepend,
+    at,
+    pop,
+    head,
+    tail,
+    size,
+    contains,
+    find,
+    toString,
   };
 };
 
