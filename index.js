@@ -633,6 +633,39 @@ const Tree = (inputArray) => {
     recurseLevelOrder(callback, [root]);
   };
 
+  const recurseInOrder = (callback, root) => {
+    if (!root) return;
+    recurseInOrder(callback, root.left);
+    callback(root);
+    recurseInOrder(callback, root.right);
+  };
+
+  const inOrder = (callback) => {
+    recurseInOrder(callback, root);
+  };
+
+  const recursePreOrder = (callback, root) => {
+    if (!root) return;
+    callback(root);
+    recursePreOrder(callback, root.left);
+    recursePreOrder(callback, root.right);
+  };
+
+  const preOrder = (callback) => {
+    recursePreOrder(callback, root);
+  };
+
+  const recursePostOrder = (callback, root) => {
+    if (!root) return;
+    recursePostOrder(callback, root.left);
+    recursePostOrder(callback, root.right);
+    callback(root);
+  };
+
+  const postOrder = (callback) => {
+    recursePostOrder(callback, root);
+  };
+
   return {
     getRoot,
     insert,
@@ -640,9 +673,21 @@ const Tree = (inputArray) => {
     find,
     levelOrder1,
     levelOrder2,
+    inOrder,
+    preOrder,
+    postOrder,
   };
 };
 
-const { getRoot, insert, find, levelOrder1, levelOrder2 } = Tree([
-  1, 2, 3, 4, 5, 6, 7,
-]);
+const {
+  getRoot,
+  insert,
+  find,
+  levelOrder1,
+  levelOrder2,
+  inOrder,
+  preOrder,
+  postOrder,
+} = Tree([1, 2, 3, 4, 5, 6, 7]);
+
+// todo from height
