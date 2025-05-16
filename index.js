@@ -78,9 +78,9 @@ function mergynomical(x) {
 
 // --------------------------------------------------------------------------------------------------------------------
 
-const Node = (value, nextNode = null) => {
-  return { value, nextNode };
-};
+// const Node = (value, nextNode = null) => {
+//   return { value, nextNode };
+// };
 
 const LinkedList1 = () => {
   const list = [];
@@ -473,3 +473,176 @@ const HashMap = () => {
 };
 
 // -------------------------------------------------------------------------------------------------------------------------
+
+const mergeSort = (arr) => {
+  if (arr.length === 1) {
+    return arr;
+  }
+  const mid = Math.round(arr.length / 2);
+  const left = mergeSort(arr.slice(0, mid));
+  const right = mergeSort(arr.slice(mid));
+  const result = [];
+  while (left.length && right.length) {
+    if (left[0] < right[0]) {
+      result.push(left.shift());
+    } else if (left[0] > right[0]) {
+      result.push(right.shift());
+    } else {
+      left.shift();
+    }
+  }
+  return [...result, ...left, ...right];
+};
+
+const Node = (data) => {
+  return {
+    data,
+    left: null,
+    right: null,
+  };
+};
+
+const BST = (arr) => {
+  if (arr.length === 1) {
+    return Node(arr[0]);
+  }
+  const mid = Math.floor(arr.length / 2) - (arr.length % 2 === 0 ? 1 : 0);
+  const node = Node(arr[mid]);
+  node.left = arr[mid - 1] ? BST(arr.slice(0, mid)) : null;
+  node.right = BST(arr.slice(mid + 1));
+  return node;
+};
+
+// const preOrder = (root) => {
+//   if (!root) {
+//     return;
+//   }
+//   console.log(root.data);
+//   preOrder(root.left);
+//   preOrder(root.right);
+// };
+
+const Tree = (inputArray) => {
+  const buildTree = (arr) => BST(mergeSort(arr));
+
+  let root = buildTree(inputArray);
+
+  const getRoot = () => root;
+
+  const insert = (value) => {
+    let current = root;
+    while (current) {
+      if (current.data === value) {
+        break;
+      } else if (current.data < value) {
+        if (current.right) {
+          current = current.right;
+        } else {
+          current.right = Node(value);
+          break;
+        }
+      } else {
+        if (current.left) {
+          current = current.left;
+        } else {
+          current.left = Node(value);
+          break;
+        }
+      }
+    }
+  };
+
+  const deleteItem = (value) => {
+    root = deleteNode(root, value);
+  };
+
+  const getSuccessor = (curr) => {
+    curr = curr.right;
+    while (curr && curr.left) {
+      curr = curr.left;
+    }
+    return curr;
+  };
+
+  const deleteNode = (root, value) => {
+    if (!root) {
+      return root;
+    }
+    if (root.data > value) {
+      root.left = deleteNode(root.left, value);
+    } else if (root.data < value) {
+      root.right = deleteNode(root.right, value);
+    } else {
+      if (!root.left) return root.right;
+      if (!root.right) return root.left;
+      let succ = getSuccessor(root);
+      root.data = succ.data;
+      root.right = deleteNode(root.right, succ.data);
+    }
+    return root;
+  };
+
+  const find = (value) => {
+    let current = root;
+    while (current) {
+      if (current.data === value) {
+        return current;
+      } else if (current.data > value) {
+        current = current.left;
+      } else if (current.data < value) {
+        current = current.right;
+      }
+    }
+    return null;
+  };
+
+  const levelOrder1 = (callback) => {
+    const queue = [root];
+
+    while (queue.length) {
+      const node = queue[0];
+      callback(node);
+      if (node.left) {
+        queue.push(node.left);
+      }
+      if (node.right) {
+        queue.push(node.right);
+      }
+      queue.shift();
+    }
+  };
+
+  const recurseLevelOrder = (callback, arr) => {
+    if (!arr.length) {
+      return;
+    }
+    const queue = [];
+    arr.forEach((el) => {
+      callback(el);
+      if (el.left) {
+        queue.push(el.left);
+      }
+      if (el.right) {
+        queue.push(el.right);
+      }
+    });
+    recurseLevelOrder(callback, queue);
+  };
+
+  const levelOrder2 = (callback) => {
+    recurseLevelOrder(callback, [root]);
+  };
+
+  return {
+    getRoot,
+    insert,
+    deleteItem,
+    find,
+    levelOrder1,
+    levelOrder2,
+  };
+};
+
+const { getRoot, insert, find, levelOrder1, levelOrder2 } = Tree([
+  1, 2, 3, 4, 5, 6, 7,
+]);
