@@ -527,8 +527,6 @@ const Tree = (inputArray) => {
 
   let root = buildTree(inputArray);
 
-  const getRoot = () => root;
-
   const insert = (value) => {
     let current = root;
     while (current) {
@@ -719,8 +717,40 @@ const Tree = (inputArray) => {
     return null;
   };
 
+  const recurseIsBalanced = (root) => {
+    if (!root) {
+      return true;
+    }
+
+    let left = 0;
+    let right = 0;
+
+    if (root.left) {
+      left = 1 + recurseHeight(root.left);
+    }
+
+    if (root.right) {
+      right = 1 + recurseHeight(root.right);
+    }
+
+    if (Math.abs(left - right) < 2) {
+      return recurseIsBalanced(root.left) && recurseIsBalanced(root.right);
+    }
+
+    return false;
+  };
+
+  const isBalanced = () => recurseIsBalanced(root);
+
+  const rebalance = () => {
+    const current = [];
+    inOrder((node) => {
+      current.push(node.data);
+    });
+    root = buildTree(current);
+  };
+
   return {
-    getRoot,
     insert,
     deleteItem,
     find,
@@ -731,18 +761,7 @@ const Tree = (inputArray) => {
     postOrder,
     height,
     depth,
+    isBalanced,
+    rebalance,
   };
 };
-
-const {
-  getRoot,
-  insert,
-  find,
-  levelOrder1,
-  levelOrder2,
-  inOrder,
-  preOrder,
-  postOrder,
-  height,
-  depth,
-} = Tree([1, 2, 3, 4, 5, 6, 7]);
