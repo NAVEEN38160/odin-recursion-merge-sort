@@ -666,6 +666,59 @@ const Tree = (inputArray) => {
     recursePostOrder(callback, root);
   };
 
+  const recurseHeight = (root) => {
+    let left = 0;
+    let right = 0;
+
+    if (root.left) {
+      left = 1 + recurseHeight(root.left);
+    }
+
+    if (root.right) {
+      right = 1 + recurseHeight(root.right);
+    }
+
+    if (right > left) return right;
+
+    if (left > right) return left;
+
+    return left;
+  };
+
+  const height = (value) => {
+    let start = root;
+    while (start) {
+      if (start.data === value) {
+        break;
+      } else if (start.data < value) {
+        start = start.right;
+      } else if (start.data > value) {
+        start = start.left;
+      }
+    }
+    if (!start) {
+      return null;
+    }
+    return recurseHeight(start);
+  };
+
+  const depth = (value) => {
+    let current = root;
+    let depth = 0;
+    while (current) {
+      if (current.data === value) {
+        return depth;
+      } else if (current.data < value) {
+        current = current.right;
+        depth += 1;
+      } else if (current.data > value) {
+        current = current.left;
+        depth += 1;
+      }
+    }
+    return null;
+  };
+
   return {
     getRoot,
     insert,
@@ -676,6 +729,8 @@ const Tree = (inputArray) => {
     inOrder,
     preOrder,
     postOrder,
+    height,
+    depth,
   };
 };
 
@@ -688,6 +743,6 @@ const {
   inOrder,
   preOrder,
   postOrder,
+  height,
+  depth,
 } = Tree([1, 2, 3, 4, 5, 6, 7]);
-
-// todo from height
