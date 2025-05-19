@@ -765,3 +765,47 @@ const Tree = (inputArray) => {
     rebalance,
   };
 };
+
+// ------------------------------------------------------------------------------------------------------------------------
+
+const validRange = (x, y) => x >= 0 && x <= 7 && y >= 0 && y <= 7;
+
+const isEqual = (arr, target) => arr[0] === target[0] && arr[1] === target[1];
+
+const getPossibleMoves = (current) => {
+  const moves = [];
+  const x = current[0];
+  const y = current[1];
+
+  if (validRange(x + 1, y + 2)) {
+    moves.push([x + 1, y + 2]);
+  }
+  if (validRange(x + 1, y - 2)) {
+    moves.push([x + 1, y - 2]);
+  }
+  if (validRange(x + 2, y + 1)) {
+    moves.push([x + 2, y + 1]);
+  }
+  if (validRange(x + 2, y - 1)) {
+    moves.push([x + 2, y - 1]);
+  }
+  if (validRange(x - 1, y + 2)) {
+    moves.push([x - 1, y + 2]);
+  }
+  if (validRange(x - 1, y - 2)) {
+    moves.push([x - 1, y - 2]);
+  }
+  if (validRange(x - 2, y + 1)) {
+    moves.push([x - 2, y + 1]);
+  }
+  if (validRange(x - 2, y - 1)) {
+    moves.push([x - 2, y - 1]);
+  }
+  return moves;
+};
+
+const knightMoves = (start, end) => {};
+
+console.log(getPossibleMoves([1, 2]));
+
+// ---------------------------------------------------------------------------------------------------------------
