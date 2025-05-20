@@ -770,7 +770,7 @@ const Tree = (inputArray) => {
 
 const validRange = (x, y) => x >= 0 && x <= 7 && y >= 0 && y <= 7;
 
-const isEqual = (arr, target) => arr[0] === target[0] && arr[1] === target[1];
+const isEqual = (src, target) => src[0] === target[0] && src[1] === target[1];
 
 const getPossibleMoves = (current) => {
   const moves = [];
@@ -804,8 +804,23 @@ const getPossibleMoves = (current) => {
   return moves;
 };
 
-const knightMoves = (start, end) => {};
+const knightMoves = (start, end) => {
+  const q = [{ position: start, path: [start] }];
 
-console.log(getPossibleMoves([1, 2]));
+  const visited = new Set([`${start[0]},${start[1]}`]);
 
-// ---------------------------------------------------------------------------------------------------------------
+  while (q.length) {
+    const { position, path } = q.shift();
+
+    if (isEqual(position, end)) return path;
+
+    for (const move of getPossibleMoves(position)) {
+      const key = `${move[0]},${move[1]}`;
+      if (!visited.has(key)) {
+        visited.add(key);
+        q.push({ position: move, path: [...path, move] });
+      }
+    }
+  }
+};
+// the end
